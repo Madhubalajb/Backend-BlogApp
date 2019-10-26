@@ -1,42 +1,9 @@
-const env = String(process.env.NODE_ENV)
-if (env != 'production') {
-    require('dotenv').config()
-}
-
-const express = require('express')
+const app = require('./app') // Express app
 const http = require('http')
-const cors = require('cors')
+const config = require('./utils/config') // for PORT
 
-const bodyParser = require('body-parser')
-const app = express()
+const server = http.createServer(app)
 
-
-const mongoUrl = process.env.MONGODB_URI
-
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true  })
-
-app.use(cors())
-app.use(bodyParser.json())
-
-app.get('/api/blogs', (request, response) => {
-    Blog
-        .find({})
-        .then(blogs => {
-            response.json(blogs)
-        })
-})
-
-app.post('/api/blogs', (request, response) => {
-    const blog = new Blog(request.body)
-
-    blog
-        .save()
-        .then(result => {
-            response.status(201).json(result)
-        })
-})
-
-const port = process.env.PORT
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`)
+server.listen(config.PORT, () => {
+    console.log(`Server running on port ${config.PORT}`)
 })

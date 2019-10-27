@@ -8,7 +8,14 @@ const totalLikes = (blogs) => {
     return blogs.map(blog => blog.likes).reduce(reducer, 0)
 }
 
+const favoriteBlog = (blogs) => {
+    const max = Math.max(...blogs.map(blog => blog.likes))
+    const fav = blogs.filter(blog => blog.likes == max)
+    return fav
+}
+
 module.exports = {
     dummy,
-    totalLikes
+    totalLikes,
+    favoriteBlog
 }

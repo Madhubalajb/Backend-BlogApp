@@ -26,8 +26,7 @@ const mostBlogs = (blogs) => {
             {
               author: blogs[index].author,
               blogs: 1
-            }
-          )
+            })
         }
     })
     const max = Math.max(...authors.map(item => item.blogs))
@@ -35,9 +34,14 @@ const mostBlogs = (blogs) => {
     return result[0]
 }
 
+const mostLikes = (blogs) => {
+    const fav = favoriteBlog(blogs)
+}
+
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }

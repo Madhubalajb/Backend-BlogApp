@@ -48,7 +48,7 @@ const mostLikes = (blogs) => {
             likes: fav_likes
         }
     }
-    return []
+    return {}
 }
 
 module.exports = {

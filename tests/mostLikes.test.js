@@ -2,7 +2,7 @@ const listHelper = require('../utils/list_helper')
 const blogList = require('../utils/blogLists')
 
 describe('most likes', () => {
-    test('should return empry array', () => {
+    test('should return empty array', () => {
         expect(listHelper.mostLikes(blogList.emptyList)).toEqual(blogList.emptyList[0])
     })
 
@@ -15,8 +15,8 @@ describe('most likes', () => {
 
     test('should return author of blog with most likes from the list', () => {
         expect(listHelper.mostLikes(blogList.blogs)).toEqual({
-            author: 'Robert C. Martin',
-            likes: 12
+            author: 'Edsger W. Dijkstra',
+            likes: 17
         })
     })
 })

@@ -3,7 +3,7 @@ const blogList = require('../utils/blogLists')
 
 describe('most blogs', () => {
     test('should return an empty array', () => {
-        expect(listHelper.mostBlogs(blogList.emptyList)).toEqual({})
+        expect(listHelper.mostBlogs(blogList.emptyList)).toEqual(blogList.emptyList[0])
     })
 
     test('should return the author of blog for the list of one blog', () => {

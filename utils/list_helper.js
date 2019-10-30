@@ -36,16 +36,19 @@ const mostBlogs = (blogs) => {
 
 const mostLikes = (blogs) => {
     const fav = favoriteBlog(blogs)
-    const fav_author = fav.author
-    let fav_likes = 0;
-    blogs.forEach((item, index) => {
-        if(item.author === fav_author)
-            fav_likes += item.likes
-    })
-    return {
-        author: fav_author,
-        likes: fav_likes
+    if(fav !== undefined) {
+        const fav_author = fav.author
+        let fav_likes = 0;
+        blogs.forEach((item, index) => {
+            if(item.author === fav_author)
+                fav_likes += item.likes
+        })
+        return {
+            author: fav_author,
+            likes: fav_likes
+        }
     }
+    return []
 }
 
 module.exports = {

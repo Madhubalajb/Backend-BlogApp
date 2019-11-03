@@ -66,10 +66,9 @@ test('blog without like property can be added with default 0', async () => {
 
     const blog_with_no_likes = await Blog.find({title: 'dummy testing'})
     expect(blog_with_no_likes[0].likes).toBe(0)
-
 })
 
-test('return 400 code when title, url properties are missing', async () => {
+test('return 400 code when title and url properties are missing', async () => {
     const dummyBlog = {
         author: "Madhubala Jayakumaran"
     }

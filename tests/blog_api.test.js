@@ -38,7 +38,7 @@ test('new blog addition', async () => {
     await api
         .post('/api/blogs')
         .send(newBlog)
-        .expect(200)
+        .expect(201)
         .expect('Content-Type', /application\/json/)
 
     const BlogsAtEnd = await helper.notesInDb()

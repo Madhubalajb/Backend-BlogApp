@@ -85,7 +85,7 @@ test('return 400 code when title and url properties are missing', async () => {
 test('deletion of a blog return 204', async () => {
     const BlogsAtStart = await helper.notesInDb()
     const blogToDelete = BlogsAtStart[0]
-    
+
     await api
         .delete(`/api/blogs/${blogToDelete.id}`)
         .expect(204)
@@ -95,6 +95,27 @@ test('deletion of a blog return 204', async () => {
 
     const blogTitles = BlogsAtEnd.map(blog => blog.title)
     expect(blogTitles).not.toContain(blogToDelete.title)
+})
+
+test('updation of blog', async () => {
+    const BlogsAtStart = await helper.notesInDb()
+    const blogToUpdate = BlogsAtStart[0]
+
+    const newBlog = {
+        title: 'updated blog'
+    }
+
+    await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(newBlog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    const BlogsAtEnd = await helper.notesInDb()
+    expect(BlogsAtEnd.length).toBe(helper.initialBlogs.length)
+
+    const blogTitles = BlogsAtEnd.map(blog => blog.title)
+    expect(blogTitles).toContain('updated blog')
 })
 
 afterAll(() => {

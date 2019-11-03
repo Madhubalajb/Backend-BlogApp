@@ -31,9 +31,9 @@ blogsRouter.post('/', async (request, response) => {
     }
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
+blogsRouter.delete('/:id', getBlog, async (request, response) => {
     try {
-        await Blog.findByIdAndRemove(request.params.id)
+        await response.person.remove()
         response.status(204).end()
     }
     catch(exception) {
@@ -41,27 +41,36 @@ blogsRouter.delete('/:id', async (request, response) => {
     }
 })
 
-blogsRouter.put('/:id', async (request, response) => {
+blogsRouter.put('/:id', getBlog, async (request, response) => {
     const body = request.body
     if(body.title !== null) 
-        let titleToUpdate = body.title
+        response.blog.title = body.title
     if(body.author !== null)
-        let authorToUpdate = body.author
+        response.blog.author = body.author
     if(body.url !== null)
-        let urlToUpdate = body.url
-    
-    const blogToUpdate = {
-        title: titleToUpdate,
-        author: authorToUpdate,
-        url: urlToUpdate
-    }
+        response.blog.url = body.url
+    if(body.likes !== null)
+        response.blog.likes = body.likes
 
     try {
-        const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blogToUpdate, { new: true })
-        response.json(updatedBlog.toJSON())
+        const updatedBlog = await response.blog.save()
+        response.json(updatedBlog)
     } catch(exception) {
         next(exception)
     }
 })
+
+async function getBlog(request, response, next) {
+    let blog 
+    try {
+        blog = await Blog.findById(request.params.id)
+        if(blog === null)
+            return response.status(404).json({message: 'Cannot find blog'})
+    } catch(exception) {
+        next(exception)
+    }
+    response.blog = blog
+    next()
+}
 
 module.exports = blogsRouter

@@ -5,6 +5,15 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const helper = require('../tests/test_helper')
 
+beforeEach(async () => {
+    await Blog.deleteMany({})
+
+    for(let blog of helper.initialBlogs) {
+        let blogObject = new Blog(blog)
+        await blogObject.save()
+    }
+})
+
 test('blogs are returned as json', async () => {
     await api
         .get('/api/blogs')

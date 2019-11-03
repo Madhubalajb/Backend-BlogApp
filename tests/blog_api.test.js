@@ -48,6 +48,27 @@ test('new blog addition', async () => {
     expect(Blogs_title).toContain('unit testing in progress')
 })
 
+test('blog without like property can be added with default 0', () => {
+    const newBlog = {
+        title: 'dummy testing',
+        author: 'Madhubala Jayakumaran',
+        url: 'www.dummy1.in'
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const BlogsAtEnd = await helper.notesInDb()
+    expect(BlogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+
+    const blog_with_no_likes = await Blog.find({title: 'dummy testing'})
+    expect(blog_with_no_likes.likes).toBe(0)
+
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

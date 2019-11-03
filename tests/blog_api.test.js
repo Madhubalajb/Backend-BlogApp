@@ -85,7 +85,7 @@ test('return 400 code when title and url properties are missing', async () => {
 test('deletion of a blog return 204', async () => {
     const BlogsAtStart = await helper.notesInDb()
     const blogToDelete = BlogsAtStart[0]
-
+    
     await api
         .delete(`/api/blogs/${blogToDelete.id}`)
         .expect(204)

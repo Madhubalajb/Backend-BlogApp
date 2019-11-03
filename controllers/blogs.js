@@ -10,19 +10,24 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
     
-    const blog = new Blog({
-        title: body.title,
-        author: body.author,
-        url: body.url,
-        likes: body.likes === undefined ? 0 : body.likes
-    })
-
-    try {
-        const newBlog = await blog.save()
-        response.json(newBlog.toJSON())
+    if (body.title !== undefined && body.author !== undefined && body.url !== undefined) {
+        const blog = new Blog({
+            title: body.title,
+            author: body.author,
+            url: body.url,
+            likes: body.likes === undefined ? 0 : body.likes
+        })
+    
+        try {
+            const newBlog = await blog.save()
+            response.json(newBlog.toJSON())
+        }
+        catch(exception) {
+            next(exception)
+        }
     }
-    catch(exception) {
-        next(exception)
+    else {
+        return response.status(400)
     }
 })
 

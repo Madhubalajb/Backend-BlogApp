@@ -82,6 +82,21 @@ test('return 400 code when title and url properties are missing', async () => {
     expect(BlogsAtEnd.length).toBe(helper.initialBlogs.length)
 })
 
+test('deletion of a blog return 204', async () => {
+    const BlogsAtStart = await helper.notesInDb()
+    const blogToDelete = BlogsAtStart[0]
+
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+
+    const BlogsAtEnd = await helper.notesInDb()
+    expect(BlogsAtEnd.length).toBe(helper.initialBlogs.length - 1)
+
+    const blogTitles = BlogsAtEnd.map(blog => blog.title)
+    expect(blogTitles).not.toContain(blogToDelete.title)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

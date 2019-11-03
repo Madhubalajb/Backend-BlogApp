@@ -3,6 +3,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const helper = require('../tests/test_helper')
 
 test('blogs are returned as json', async () => {
     await api
@@ -24,6 +25,18 @@ test('new blog addition', async () => {
         url: 'www.dummy.in',
         likes: 1
     }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    const BlogsAtEnd = await helper.notesInDb()
+    expect(BlogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+    
+    const Blogs_title = BlogsAtEnd.map(blog => blog.title)
+    expect(Blogs_title).toContain('unit testing in progress')
 })
 
 afterAll(() => {

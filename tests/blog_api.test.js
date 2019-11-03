@@ -69,6 +69,20 @@ test('blog without like property can be added with default 0', async () => {
 
 })
 
+test('return 400 code when title, url properties are missing', async () => {
+    const dummyBlog = {
+        author: "Madhubala Jayakumaran"
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(dummyBlog)
+        .expect(400)
+
+    const BlogsAtEnd = await helper.notesInDb()
+    expect(BlogsAtEnd.length).toBe(helper.initialBlogs.length)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

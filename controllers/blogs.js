@@ -1,5 +1,5 @@
 const blogsRouter = require('express').Router()
-const Blog = require('../models/blog') //Mongoose model
+const Blog = require('../models/Blog') //Mongoose model
 
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({})

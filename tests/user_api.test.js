@@ -12,7 +12,7 @@ describe('when there is only one user in db', () => {
         await user.save()
     })
 
-    test('creation suceeds with a fresh username', () => {
+    test('creation suceeds with a fresh username', async () => {
         const usersAtStart = await helper.usersInDB()
 
         const newUser = {
@@ -32,6 +32,27 @@ describe('when there is only one user in db', () => {
 
         const usernames = usersAtEnd.map(user => user.username)
         expect(usernames).toContain(newUser.username)
+    })
+
+    test('creation fails with proper statuscode and message if username already exits', async () => {
+        const usersAtStart = await helper.usersInDB()
+
+        const newUser = {
+            name: 'Dummy User',
+            username: 'dummy',
+            password: 'code'
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-type', /application\/json/)
+
+        expect(result.body.error).toContain('`username` to be unique')   
+         
+        const usersAtEnd = await helper.usersInDB()
+        expect(usersAtStart.length).toBe(usersAtEnd.length)
     })
 })
 

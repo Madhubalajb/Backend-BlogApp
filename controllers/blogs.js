@@ -2,7 +2,7 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/Blog') //Mongoose model
 
 blogsRouter.get('/', async (request, response) => {
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find({}).populate('users')
 
     response.json(blogs.map(blog => blog.toJSON()))
 })

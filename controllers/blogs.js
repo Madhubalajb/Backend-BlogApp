@@ -9,17 +9,22 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
+
+    const user = await user.findById(body.userId)
     
     if (body.title !== undefined && body.author !== undefined && body.url !== undefined) {
         const blog = new Blog({
             title: body.title,
             author: body.author,
             url: body.url,
-            likes: body.likes === undefined ? 0 : body.likes
+            likes: body.likes === undefined ? 0 : body.likes,
+            user: user._id
         })
     
         try {
             const newBlog = await blog.save()
+            user.blogs = user.blogs.concat(newBlog._id)
+            await user.save()
             response.json(newBlog.toJSON())
         }
         catch(exception) {

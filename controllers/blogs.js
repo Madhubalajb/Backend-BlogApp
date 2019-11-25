@@ -1,5 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/Blog') //Mongoose model
+const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 
 const getTokenFrom = request => {
@@ -27,7 +28,7 @@ blogsRouter.post('/', async (request, response) => {
         return response.status(401).json({ error: 'token missing or invalid' })
     }
 
-    const user = await user.findById(decodedToken.id)
+    const user = await User.findById(decodedToken.id)
     
     if (body.title !== undefined && body.author !== undefined && body.url !== undefined) {
         const blog = new Blog({
@@ -42,7 +43,7 @@ blogsRouter.post('/', async (request, response) => {
             const savedBlog = await blog.save()
             user.blogs = user.blogs.concat(savedBlog._id)
             await user.save()
-            response.json(newBlog.toJSON())
+            response.json(savedBlog.toJSON())
         }
         catch(exception) {
             next(exception)

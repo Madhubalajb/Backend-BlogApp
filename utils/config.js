@@ -1,12 +1,12 @@
 const env = String(process.env.NODE_ENV)
-if (env != 'production') {
+if (env !== 'production') {
     require('dotenv').config()
 }
 
 let PORT = process.env.PORT
 let MONGODB_URI = process.env.MONGODB_URI
 
-if(process.env.NODE_ENV === 'test') {
+if(env === 'test') {
     MONGODB_URI = process.env.TEST_MONGODB_URI
 }
 

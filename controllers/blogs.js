@@ -4,24 +4,25 @@ const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (request, response) => {
-    const blogs = await Blog.find({}).populate('users')
+    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1})
+
+    //populating users --- 'user' is the field in Blog model.
 
     response.json(blogs.map(blog => blog.toJSON()))
 })
 
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', async (request, response, next) => {
     const body = request.body
-
-    //const token = getTokenFrom(request)
-
+    
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-    if(!token || !decodedToken.id) {
+    
+    if(!request.token || !decodedToken.id) {
         return response.status(401).json({ error: 'token missing or invalid' })
     }
-
+    
     const user = await User.findById(decodedToken.id)
     
+
     if (body.title !== undefined && body.author !== undefined && body.url !== undefined) {
         const blog = new Blog({
             title: body.title,
@@ -46,7 +47,13 @@ blogsRouter.post('/', async (request, response) => {
     }
 })
 
-blogsRouter.delete('/:id', getBlog, async (request, response) => {
+blogsRouter.delete('/:id', getBlog, async (request, response, next) => {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    
+    if(!decodedToken.id) {
+        return response.status(401).error({ error: 'token missing or invalid' })
+    }
+    
     try {
         await response.person.remove()
         response.status(204).end()
@@ -56,7 +63,7 @@ blogsRouter.delete('/:id', getBlog, async (request, response) => {
     }
 })
 
-blogsRouter.put('/:id', getBlog, async (request, response) => {
+blogsRouter.put('/:id', getBlog, async (request, response, next) => {
     const body = request.body
     if(body.title !== null) 
         response.blog.title = body.title
@@ -76,9 +83,10 @@ blogsRouter.put('/:id', getBlog, async (request, response) => {
 })
 
 async function getBlog(request, response, next) {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
     let blog 
     try {
-        blog = await Blog.findById(request.params.id)
+        blog = await Blog.findById(decodedToken.id)
         if(blog === null)
             return response.status(404).json({message: 'Cannot find blog'})
     } catch(exception) {
@@ -86,6 +94,6 @@ async function getBlog(request, response, next) {
     }
     response.blog = blog
     next()
-}
+} 
 
 module.exports = blogsRouter

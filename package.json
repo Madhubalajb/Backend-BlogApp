@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "watch": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
-    "build-ui": "rmdir /s build && cd ../blog-app && npm run build --prod && xcopy build \"C:\\Users\\JB MADHUBALA\\Projects\\backend-blogApp\\build\" /e /i",
+    "build-ui": "rmdir /s /q build && cd ../blog-app && npm run build --prod && xcopy build \"C:\\Users\\JB MADHUBALA\\Projects\\backend-blogApp\\build\" /e /i",
     "deploy": "git push heroku master",
     "deploy:full": "npm run build-ui && git add . && git commit -m ui-build && git push && npm run deploy",
     "logs:prod": "heroku logs --tail"
